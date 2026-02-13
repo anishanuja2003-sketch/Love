@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine ❤️</title>
+
+<style>
+
+body{
+    margin:0;
+    height:100vh;
+    background:#fff0f3;
+    font-family:Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+
+/* CONTAINER */
+.container{
+    text-align:center;
+    width:90%;
+    max-width:320px;
+    padding:20px;
+    background:#EEF0F8;
+    border-radius:20px;
+    border:3px solid #ff4d6d;
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    transition:all 0.6s ease;
+}
+
+/* FALLING HEARTS */
+.fallingHeart{
+    position:fixed;
+    top:-20px;
+    font-size:18px;
+    animation:fall linear forwards;
+    pointer-events:none;
+    z-index:999;
+}
+
+@keyframes fall{
+    to{
+        transform:translateY(110vh);
+        opacity:0;
+    }
+}
+
+
+/* SECOND PAGE COLOR */
+.container.secondPage{
+    background:#fafafd;
+}
+
+
+h1{
+    color:#ff4d6d;
+}
+
+/* VIDEO */
+#mainImage{
+    width:70%;
+    margin:auto;
+    transition:all 0.6s ease;
+}
+
+video{
+    width:100%;
+    border-radius:15px;
+}
+
+/* BUTTONS */
+button{
+    padding:12px 20px;
+    margin:8px;
+    border-radius:12px;
+    border:none;
+    cursor:pointer;
+    transition:all 0.6s ease;
+}
+
+#yesBtn{
+    background:#ff4d6d;
+    color:white;
+}
+
+#noBtn{
+    background:white;
+    color:#ff4d6d;
+    border:2px solid #ff4d6d;
+}
+
+/* FINAL PAGE */
+#final{
+    display:none;
+    opacity:0;
+    transform:scale(0.95);
+    transition:all 0.6s ease;
+}
+
+#final.show{
+    opacity:1;
+    transform:scale(1);
+}
+
+.quote{
+    margin-top:10px;
+    font-size:18px;
+}
+
+/* FADE OUT */
+.fade-out{
+    opacity:0;
+    transform:scale(0.95);
+}
+
+/* HEART EXPLOSION */
+.heartParticle{
+    position:absolute;
+    font-size:20px;
+    animation:heartPop 1s forwards;
+}
+
+@keyframes heartPop{
+    to{
+        transform:translate(var(--x),var(--y)) scale(1.5);
+        opacity:0;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container" id="container">
+
+<h1 id="titleText">Will you be my valentine? ❤️</h1>
+
+<div id="mainImage">
+
+<!-- FIRST VIDEO -->
+<video id="video1" autoplay muted loop playsinline>
+<source src="hug_animations.mp4" type="video/mp4">
+</video>
+
+</div>
+
+<button id="yesBtn">Yes</button>
+<button id="noBtn">No</button>
+
+<div id="final">
+
+<!-- SECOND VIDEO -->
+<video id="video2" autoplay muted loop playsinline>
+<source src="hug_animation.mp4" type="video/mp4">
+</video>
+
+<div class="quote">
+<h2>HAPPY VALENTINE'S DAY CHLOO! ❣️</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let yesCount=0;
+let speed=0.5;
+
+let video1=document.getElementById("video1");
+let video2=document.getElementById("video2");
+
+let yesBtn=document.getElementById("yesBtn");
+let noBtn=document.getElementById("noBtn");
+
+let mainImage=document.getElementById("mainImage");
+let final=document.getElementById("final");
+let titleText=document.getElementById("titleText");
+let container=document.getElementById("container");
+
+/* start slow */
+video1.playbackRate=speed;
+
+/* YES BUTTON */
+yesBtn.onclick=function(){
+
+yesCount++;
+
+/* increase speed */
+if(speed<2){
+speed+=0.2;
+video1.playbackRate=speed;
+}
+
+/* HEART EXPLOSION */
+for(let i=0;i<25;i++){
+
+let heart=document.createElement("div");
+
+heart.innerHTML="❤️";
+heart.className="heartParticle";
+
+heart.style.setProperty("--x",(Math.random()*200-100)+"px");
+heart.style.setProperty("--y",(Math.random()*200-100)+"px");
+
+heart.style.left="50%";
+heart.style.top="50%";
+
+mainImage.appendChild(heart);
+
+setTimeout(()=>heart.remove(),1000);
+
+}
+
+/* AFTER 7 CLICKS */
+if(yesCount>=7){
+
+titleText.innerText="Love You Papa Chloo 🫂❣️✨";
+
+/* fade out */
+mainImage.classList.add("fade-out");
+yesBtn.classList.add("fade-out");
+noBtn.classList.add("fade-out");
+
+/* change color */
+container.classList.add("secondPage");
+
+setTimeout(()=>{
+
+mainImage.style.display="none";
+yesBtn.style.display="none";
+noBtn.style.display="none";
+
+/* show second page */
+final.style.display="block";
+
+setTimeout(()=>{
+final.classList.add("show");
+},50);
+
+video2.playbackRate=1;
+
+},600);
+
+}
+
+};
+
+/* NO BUTTON MOVE */
+noBtn.onclick=function(){
+
+let x=Math.random()*(window.innerWidth-100);
+let y=Math.random()*(window.innerHeight-50);
+
+noBtn.style.position="fixed";
+noBtn.style.left=x+"px";
+noBtn.style.top=y+"px";
+
+};
+
+/* FALLING HEARTS FUNCTION */
+function createFallingHeart(){
+
+let heart=document.createElement("div");
+
+heart.innerHTML="❤️";
+heart.className="fallingHeart";
+
+/* random position */
+heart.style.left=Math.random()*100+"vw";
+
+/* random speed */
+heart.style.animationDuration=(Math.random()*3+3)+"s";
+
+/* random size */
+heart.style.fontSize=(Math.random()*10+15)+"px";
+
+document.body.appendChild(heart);
+
+/* remove after animation */
+setTimeout(()=>{
+heart.remove();
+},6000);
+
+}
+
+/* create hearts continuously */
+setInterval(createFallingHeart,400);
+
+
+</script>
+
+</body>
+</html>
